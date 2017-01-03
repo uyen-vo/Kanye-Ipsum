@@ -1,7 +1,9 @@
-Written in Eclipse IDE
+Written in Eclipse IDE and Android Studio
 A text generator for a Kanye Ipsum app (based off Lorem Ipsum) I am working on. Android Studio portion will be pushed soon once I've made decent progress on it.
 
 This text generator takes in a txt file (in the local directory), each line being a paragraph. The "speech.txt" file is pre-loaded with Kanye speeches and lyrics. Meant to be used in my app.
+
+The next directory is my Android Studio work. This will be updated on a consistent basis.
 
 So far it supports the following features:
 	- Generating a single paragraph with N sentences
@@ -12,11 +14,22 @@ So far it supports the following features:
 	- Paragraph tags (HTML)
 	- All caps feature
 
+
 Further implementation:
 	- Possibly header tags
 	- Randomly adding ? or !, possibly ignoring lines that end with "..."
 	- Most of the other functions the app will support will probably be done in Android Studio (exporting to .docx or .txt)
 	- Support for classic Lorem
 
+	- Clear feature (AS)
+	- Interactivity with the censor function (AS)
+
+
 Things learned:
 	- More familiar with regular-expression constructs in Java like word boundaries
+
+
+	- Use of threads in Android Studio
+	- Interactivity between different Widgets, like TextView, ScrollView, CheckBox, EditText, TextSwitcher
+	- Incorporated a Splash screen in the "proper" way
+	- Further familiarized myself with XML
