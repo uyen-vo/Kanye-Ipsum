@@ -1,7 +1,7 @@
 package com.example.spellmaus.kanyeipsum;
-
 import android.Manifest;
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -199,16 +199,19 @@ public class MainActivity extends AppCompatActivity {
         downloadFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar s = Snackbar.make(findViewById(R.id.myCoordinatorLayout), "Save file to Downloads?", Snackbar.LENGTH_INDEFINITE);
-                s.setAction("SAVE", new View.OnClickListener(){
-                    @Override
-                    public void onClick(View v){
-                        storagePermitted(MainActivity.this);
-                        writeStorage(v);
-                    }
-                });
-                s.setActionTextColor(Color.WHITE);
-                s.show();
+//                Snackbar s = Snackbar.make(findViewById(R.id.myCoordinatorLayout), "Save file to Downloads?", Snackbar.LENGTH_INDEFINITE);
+//                s.setAction("SAVE", new View.OnClickListener(){
+//                    @Override
+//                    public void onClick(View v){
+//                       // storagePermitted(MainActivity.this);
+//                        writeStorage(v);
+//                    }
+// 6.               });
+//                s.setActionTextColor(Color.WHITE);
+//                s.show();
+
+                storagePermitted(MainActivity.this);
+                writeStorage(view);
             }
         });
 
@@ -218,10 +221,10 @@ public class MainActivity extends AppCompatActivity {
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public boolean fileExistance(String fname){
-        File file = getBaseContext().getFileStreamPath(fname);
-        return file.exists();
-    }
+//    public boolean fileExistance(String fname){
+//        File file = getBaseContext().getFileStreamPath(fname);
+//        return file.exists();
+//    }
 
     private static boolean storagePermitted(Activity activity) {
 
@@ -260,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(),"Ipsum 3",Toast.LENGTH_SHORT).show();
 //            FileOutputStream fo = new FileOutputStream(f, false);
 //            Toast.makeText(getApplicationContext(),"Ipsum 4",Toast.LENGTH_SHORT).show();
-//
+//*
 //            fo.write(textField.getBytes());
 //            Toast.makeText(getApplicationContext(),"Ipsum 5",Toast.LENGTH_SHORT).show();
 //
@@ -270,21 +273,53 @@ public class MainActivity extends AppCompatActivity {
 //            e2.printStackTrace();
 //        }
 
+        //internal storage
+        if(textField == null || textField.isEmpty()){
+            return;
+        }
 
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        File file = new File(path, "_Kanye_Test.txt");
+//        FileOutputStream fo = null;
+//        File file = new File("kanye_ipsum.txt");
+//        try{
+//            fo = openFileOutput("kanye_ipsum.txt", MODE_PRIVATE);
+//            fo.write(textField.getBytes());
+//            Log.i("writeToFile", "File created and written");
+//            fo.close();
+//        } catch (IOException e2){
+//            e2.printStackTrace();
+//        }
+
+        //Saving to external storage
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(path, "_kanye.txt");
+        Uri contentUri = Uri.fromFile(file);
         try {
             Log.i("tryBlock", "Enter Try");
             FileOutputStream stream = new FileOutputStream(file, false);
             stream.write(textField.getBytes());
             stream.close();
             Log.i("saveData", "Data Saved");
+            contentUri = Uri.fromFile(file);
         } catch (IOException e) {
             Log.e("SAVE DATA", "Could not write file " + e.getMessage());
         }
-        Uri contentUri = Uri.fromFile(file);
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,contentUri);
-        sendBroadcast(mediaScanIntent);
+        //Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,contentUri);
+        //sendBroadcast(mediaScanIntent);
+
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("application/msword");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+        startActivity(Intent.createChooser(shareIntent, "Share via"));
+
+
+        //downloading from the Internet
+//        Uri c = Uri.parse("http://m.uploadedit.com/ba3s/1483548069740.txt");
+//        DownloadManager.Request request = new DownloadManager.Request(c);
+//        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "_kanye.txt");
+//        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
+//        request.allowScanningByMediaScanner();// if you want to be available from media players
+//        DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//        manager.enqueue(request);
 
 
     }
@@ -313,14 +348,14 @@ public class MainActivity extends AppCompatActivity {
         if(sub.isEmpty() || sub.length() == 0 || sub.equals("") || sub == null)
         {
             //EditText is empty
-            op="Please input a number from 1-99.";
+            Toast.makeText(getApplicationContext(),"Only numbers from 1-99", Toast.LENGTH_SHORT).show();
         }
         else
         {
             //EditText is not empty
             int num = parseInt(sub);
             if(num == 0){
-                op = "Please input a number from 1-99.";
+                Toast.makeText(getApplicationContext(),"Only numbers from 1-99", Toast.LENGTH_SHORT).show();
             }
             else {
                 if (sentOrPara == 0) {

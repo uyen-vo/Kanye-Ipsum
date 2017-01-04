@@ -82,7 +82,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="141dp"
-        app:srcCompat="@drawable/ic_save_white_48dp"/>
+        app:srcCompat="@drawable/share_variant" />
 
     <CheckBox
         android:text="C"
@@ -160,5 +160,6 @@
         android:layout_below="@+id/fa2"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
 
 </RelativeLayout>

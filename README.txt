@@ -3,7 +3,7 @@ A text generator for a Kanye Ipsum app (based off Lorem Ipsum) I am working on. 
 
 This text generator takes in a txt file (in the local directory), each line being a paragraph. The "speech.txt" file is pre-loaded with Kanye speeches and lyrics. Meant to be used in my app.
 
-The next directory is my Android Studio work. This will be updated on a consistent basis.
+The next directory is my Android Studio work. This is the actual work and will be updated on a consistent basis. Comments are kept for my own reference.
 
 So far it supports the following features:
 	- Generating a single paragraph with N sentences
@@ -13,23 +13,31 @@ So far it supports the following features:
 	- Censorship support, removes cursing
 	- Paragraph tags (HTML)
 	- All caps feature
+	- Clear feature (AS)
+	- Interactivity with the censor function (AS)
+	- Share button
+	- Limitation on amount of characters to input
+	- Switch between sentences/paragraphs
 
 
 Further implementation:
 	- Possibly header tags
 	- Randomly adding ? or !, possibly ignoring lines that end with "..."
-	- Most of the other functions the app will support will probably be done in Android Studio (exporting to .docx or .txt)
 	- Support for classic Lorem
-
-	- Clear feature (AS)
-	- Interactivity with the censor function (AS)
-
+	- Exporting to docx and txt
+	
 
 Things learned:
 	- More familiar with regular-expression constructs in Java like word boundaries
-
 
 	- Use of threads in Android Studio
 	- Interactivity between different Widgets, like TextView, ScrollView, CheckBox, EditText, TextSwitcher
 	- Incorporated a Splash screen in the "proper" way
 	- Further familiarized myself with XML
+	- Handling external/internal storage
+	- More understanding of API like DownloadManager, Uri
+
+
+Known bugs:
+	- Keyboard does not hide when clicking in the ScrollView area
+	- (Fixing tomorrow) txt and doc support, figured how to convert File to Uri successfully
