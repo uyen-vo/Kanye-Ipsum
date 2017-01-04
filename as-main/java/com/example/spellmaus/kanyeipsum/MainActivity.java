@@ -1,13 +1,21 @@
 package com.example.spellmaus.kanyeipsum;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
@@ -15,6 +23,7 @@ import android.view.MenuItem;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -22,6 +31,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+import android.content.ClipboardManager;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -31,6 +41,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -41,6 +54,10 @@ import java.util.Locale;
 import java.util.concurrent.locks.*;
 
 import static java.lang.Integer.parseInt;
+
+
+
+//generate button should hide kb
 
 public class MainActivity extends AppCompatActivity {
     private static Lock lock;
@@ -71,9 +88,11 @@ public class MainActivity extends AppCompatActivity {
     //Checkbox fields
     boolean pTags;
     boolean caps;
+    boolean censor;
 
-    boolean firstClick = true;
     boolean debug = false;
+
+    String textField;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -143,20 +162,138 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        numInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        //rightside floating action buttons
+        FloatingActionButton clearFab = (FloatingActionButton) findViewById(R.id.fa2);
+        clearFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                e.setText(""); //clears text field
+                textField = "";
 
             }
         });
+
+        FloatingActionButton copyFab = (FloatingActionButton) findViewById(R.id.fab);
+        copyFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"Copied to Clipboard", Toast.LENGTH_SHORT).show();
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(getApplicationContext().CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("textContent", textField);
+                clipboard.setPrimaryClip(clip);
+
+            }
+
+        });
+
+        FloatingActionButton downloadFab = (FloatingActionButton) findViewById(R.id.fa3);
+        downloadFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar s = Snackbar.make(findViewById(R.id.myCoordinatorLayout), "Save file to Downloads?", Snackbar.LENGTH_INDEFINITE);
+                s.setAction("SAVE", new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        storagePermitted(MainActivity.this);
+                        writeStorage(v);
+                    }
+                });
+                s.setActionTextColor(Color.WHITE);
+                s.show();
+            }
+        });
+
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    public boolean fileExistance(String fname){
+        File file = getBaseContext().getFileStreamPath(fname);
+        return file.exists();
+    }
+
+    private static boolean storagePermitted(Activity activity) {
+
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+
+                ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+
+            return true;
+
+        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+        return false;
+
+    }
+
+    public void writeStorage(View v){
+//        int count = 1;
+//        String append = "";
+//        String file_name = "kanye_ipsum";
+//        while(fileExistance(file_name)){
+//            count++;
+//            append = "_" + count;
+//        }
+//        file_name = file_name + append;
+//        //save multiple instances
+//        Toast.makeText(getApplicationContext(),"Ipsum 1",Toast.LENGTH_SHORT).show();
+//        String file_name = "_kanman.txt";
+//        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+//        File f = new File(path, "KanyeIpsum.txt");
+//        if (!f.mkdirs()) {
+//            Log.e("File creation", "Directory not created");
+//        }
+//        Toast.makeText(getApplicationContext(),"Ipsum 2",Toast.LENGTH_SHORT).show();
+//
+//        try{
+//            Toast.makeText(getApplicationContext(),"Ipsum 3",Toast.LENGTH_SHORT).show();
+//            FileOutputStream fo = new FileOutputStream(f, false);
+//            Toast.makeText(getApplicationContext(),"Ipsum 4",Toast.LENGTH_SHORT).show();
+//
+//            fo.write(textField.getBytes());
+//            Toast.makeText(getApplicationContext(),"Ipsum 5",Toast.LENGTH_SHORT).show();
+//
+//            fo.close();
+//            Toast.makeText(getApplicationContext(),"Ipsum Saved",Toast.LENGTH_SHORT).show();
+//        } catch (IOException e2){
+//            e2.printStackTrace();
+//        }
+
+
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File file = new File(path, "_Kanye_Test.txt");
+        try {
+            Log.i("tryBlock", "Enter Try");
+            FileOutputStream stream = new FileOutputStream(file, false);
+            stream.write(textField.getBytes());
+            stream.close();
+            Log.i("saveData", "Data Saved");
+        } catch (IOException e) {
+            Log.e("SAVE DATA", "Could not write file " + e.getMessage());
+        }
+        Uri contentUri = Uri.fromFile(file);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,contentUri);
+        sendBroadcast(mediaScanIntent);
+
+
+    }
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public void onCensorClicked(View v){ censor = true; }
 
     public void onCapsClicked(View v){
         caps = true;
@@ -170,20 +307,44 @@ public class MainActivity extends AppCompatActivity {
         if(debug)
             Toast.makeText(getApplicationContext(),"Generator clicked", Toast.LENGTH_SHORT).show();
 
-        int num = parseInt(numInput.getText().toString());
+        hideKeyboard(v);
+        String sub = numInput.getText().toString();
         String op = "";
-        if(sentOrPara==0){
-            if(debug)
-                Toast.makeText(getApplicationContext(),"You have selected " + num + " sentences in one paragraph.", Toast.LENGTH_SHORT).show();
-
-            op = getSentences(num,caps,pTags);
+        if(sub.isEmpty() || sub.length() == 0 || sub.equals("") || sub == null)
+        {
+            //EditText is empty
+            op="Please input a number from 1-99.";
         }
-        else{
-            if(debug)
-                Toast.makeText(getApplicationContext(),"You have selected " + num + " paragraphs.", Toast.LENGTH_SHORT).show();
-            op = getParagraphs(num,caps,pTags);
+        else
+        {
+            //EditText is not empty
+            int num = parseInt(sub);
+            if(num == 0){
+                op = "Please input a number from 1-99.";
+            }
+            else {
+                if (sentOrPara == 0) {
+                    if (debug)
+                        Toast.makeText(getApplicationContext(), "You have selected " + num + " sentences in one paragraph.", Toast.LENGTH_SHORT).show();
+
+                    op = getSentences(num, caps, pTags);
+                } else {
+                    if (debug)
+                        Toast.makeText(getApplicationContext(), "You have selected " + num + " paragraphs.", Toast.LENGTH_SHORT).show();
+                    op = getParagraphs(num, caps, pTags);
+                }
+            }
         }
 
+        if(censor){
+            op = censor(op);
+            if (debug)
+                Toast.makeText(getApplicationContext(), "Censor.", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+        textField = op;
         e.setText(op);
         // num caps ptags
 //        String i = "\n\n3 sentences: " + getSentences(3, true, true);

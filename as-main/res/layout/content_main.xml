@@ -12,43 +12,90 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.spellmaus.kanyeipsum.MainActivity"
     tools:showIn="@layout/activity_main"
-    android:clickable="false">
+    android:clickable="true"
+    android:focusableInTouchMode="true">
+
+    <ScrollView
+        android:id="@+id/scroller"
+        android:layout_width="250dp"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/numField"
+        android:layout_alignParentTop="true"
+        android:focusableInTouchMode="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/scroll_content"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/colorPrimaryDark"
+            android:typeface="monospace"
+            android:fontFamily="monospace"
+            android:inputType="none"
+            android:textSize="14sp"
+            />
+    </ScrollView>
+
+    <TextSwitcher
+        android:id="@+id/paraOrSent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@+id/scroller"
+        android:layout_alignStart="@+id/scroller"
+        android:layout_toLeftOf="@+id/numField"
+        android:layout_toStartOf="@+id/numField"
+        android:clickable="true"
+        android:layout_alignTop="@+id/button2" />
+
 
     <CheckBox
-        android:text="All Caps"
+        android:text="T"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/checkBox2"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/scroller"
-        android:layout_alignStart="@+id/scroller"
-        android:layout_marginTop="14dp"
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:buttonTint="@color/colorPrimary"
         android:checked="false"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:fontFamily="sans-serif-condensed"
+        android:fontFamily="serif"
         android:textSize="14sp"
-        android:textAllCaps="true"
-        android:onClick = "onCapsClicked"/>
+        android:onClick = "onCapsClicked"
+        android:layout_below="@+id/checkBox"
+        android:layout_alignLeft="@+id/checkBox"
+        android:layout_alignStart="@+id/checkBox"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
 
-    <CheckBox
-        android:text="Paragraph Tags"
+        />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fa3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/checkBox"
-        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        android:clickable="true"
+        app:fabSize="mini"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/censorBox"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="141dp"
+        app:srcCompat="@drawable/ic_save_white_48dp"/>
+
+    <CheckBox
+        android:text="C"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/checkBox2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/censorBox"
+        android:layout_alignLeft="@+id/checkBox2"
+        android:layout_alignStart="@+id/checkBox2"
         android:buttonTint="@color/colorPrimary"
-        android:checked="false"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:fontFamily="sans-serif-condensed"
-        android:textSize="14sp"
-        android:textAllCaps="true"
-        android:layout_alignBaseline="@+id/checkBox2"
-        android:layout_alignBottom="@+id/checkBox2"
-        android:layout_alignRight="@+id/scroller"
-        android:layout_alignEnd="@+id/scroller"
-        android:onClick="onParaTagClicked"/>
+        android:onClick="onCensorClicked"/>
 
     <Button
         android:text="Generate"
@@ -58,41 +105,8 @@
         android:onClick="clickGen"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/scroller"
-        android:layout_alignStart="@+id/scroller" />
-
-    <ScrollView
-        android:id="@+id/scroller"
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/checkBox2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="26dp"
-        android:layout_above="@+id/numField">
-
-        <TextView
-            android:id="@+id/scroll_content"
-            android:layout_width="250dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:textIsSelectable="true"
-            android:textColor="@color/colorPrimaryDark"
-            android:typeface="monospace"
-            android:fontFamily="monospace"
-            android:inputType="none"
-            android:textSize="14sp"
-            />
-    </ScrollView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:srcCompat="@color/colorAccent"
-        app:fabSize="mini"
-        android:layout_below="@+id/numField"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="150dp"
@@ -100,46 +114,51 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/numField"
-        android:layout_above="@+id/button2"
-        android:layout_alignRight="@+id/scroller"
-        android:layout_alignEnd="@+id/scroller"
-/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/paraOrSent"
+        android:maxLength="2"
+        />
 
-    <TextSwitcher
-        android:id="@+id/paraOrSent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignTop="@+id/numField"
-        android:layout_alignLeft="@+id/scroller"
-        android:layout_alignStart="@+id/scroller"
-        android:layout_above="@+id/button2"
-        android:layout_toLeftOf="@+id/numField"
-        android:layout_toStartOf="@+id/numField"
-        android:clickable="true" />
-
+    <CheckBox
+        android:text="p"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox"
+        style="@style/Widget.AppCompat.CompoundButton.CheckBox"
+        android:buttonTint="@color/colorPrimary"
+        android:checked="false"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:fontFamily="sans-serif"
+        android:textSize="14sp"
+        android:textAllCaps="false"
+        android:onClick="onParaTagClicked"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton3"
+        android:id="@+id/fa2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:srcCompat="@color/colorAccent"
+        app:srcCompat="@drawable/ic_backspace_white_48dp"
         app:fabSize="mini"
-        android:layout_below="@+id/numField"
-        android:layout_alignRight="@+id/numField"
-        android:layout_alignEnd="@+id/numField" />
+        android:layout_below="@+id/censorBox"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="21dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:srcCompat="@color/colorAccent"
+        app:srcCompat="@drawable/ic_content_copy_white_48dp"
         app:fabSize="mini"
-        android:layout_below="@+id/numField"
-        android:layout_toLeftOf="@+id/floatingActionButton3"
-        android:layout_toStartOf="@+id/floatingActionButton3"
-        android:layout_marginRight="22dp"
-        android:layout_marginEnd="22dp" />
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/fa2"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
